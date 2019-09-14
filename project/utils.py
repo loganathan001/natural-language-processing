@@ -46,15 +46,12 @@ def load_embeddings(embeddings_path):
     # Note that here you also need to know the dimension of the loaded embeddings.
     # When you load the embeddings, use numpy.float32 type as dtype
 
-    ########################
-    #### YOUR CODE HERE ####
-    ########################
+    starspace_embeddings = dict()
+    for line in open(embeddings_path, encoding='utf-8'):
+        row = line.strip().split('\t')
+        starspace_embeddings[row[0]] = np.array(row[1:], dtype=np.float32)
 
-    # remove this when you're done
-    raise NotImplementedError(
-        "Open utils.py and fill with your code. In case of Google Colab, download"
-        "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
-        "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
+    return starspace_embeddings, starspace_embeddings.shape
 
 
 def question_to_vec(question, embeddings, dim):
