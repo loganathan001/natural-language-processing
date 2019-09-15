@@ -51,7 +51,7 @@ def load_embeddings(embeddings_path):
         row = line.strip().split('\t')
         starspace_embeddings[row[0]] = np.array(row[1:], dtype=np.float32)
 
-    return starspace_embeddings, starspace_embeddings[next(iter(starspace_embeddings))].shape
+    return starspace_embeddings, starspace_embeddings[next(iter(starspace_embeddings))].shape[0]
 
 
 def question_to_vec(question, embeddings, dim=300):
