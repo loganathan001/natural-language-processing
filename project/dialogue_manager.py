@@ -23,8 +23,8 @@ class ThreadRanker(object):
 
         # HINT: you have already implemented a similar routine in the 3rd assignment.
         
-        question_vec = #### YOUR CODE HERE ####
-        best_thread = #### YOUR CODE HERE ####
+        question_vec = question_to_vec(question, word_embeddings, self.embeddings_dim)
+        best_thread = best_matching_thread_id(question_vec, thread_embeddings)
         
         return thread_ids[best_thread]
 

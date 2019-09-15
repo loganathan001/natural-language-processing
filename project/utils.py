@@ -13,7 +13,7 @@ RESOURCE_PATH = {
     'TAG_CLASSIFIER': 'tag_classifier.pkl',
     'TFIDF_VECTORIZER': 'tfidf_vectorizer.pkl',
     'THREAD_EMBEDDINGS_FOLDER': 'thread_embeddings_by_tags',
-    'WORD_EMBEDDINGS': 'word_embeddings.tsv',
+    'WORD_EMBEDDINGS': 'starspace_embedding.tsv',
 }
 
 
@@ -80,7 +80,7 @@ def unpickle_file(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
     
-def rank_candidates(question, candidates, embeddings, dim=300):
+def best_matching_thread_id(question_vec, thread_embeddings):
     """
         question: a string
         candidates: a list of strings (candidates) which we want to rank
@@ -90,11 +90,12 @@ def rank_candidates(question, candidates, embeddings, dim=300):
         result: a list of pairs (initial position in the list, question)
     """
 
-    q_vecs = np.array([question_to_vec(question, embeddings, dim) for i in range(len(candidates))])
-    cand_vecs = np.array([question_to_vec(candidate, embeddings, dim) for candidate in candidates])
-    cosines = np.array(cosine_similarity(q_vecs, cand_vecs)[0])
-    merged_list = list(zip(cosines, range(len(candidates)), candidates))
+    max_cosine_value = -1.0
+    max_question_id = -1;
+    for i, thread_vec in enumerate(thread_embeddings) :
+        cosine_value = cosine_similarity([question_vec], [thread_vec])[0]
+        if cosine_value > max_cosine_value:
+            max_cosine_value = cosine_value
+            max_question_id = i
 
-    sorted_list  = sorted(merged_list, key=lambda x: x[0], reverse=True)
-    result = [(b,c) for a,b,c in sorted_list]
-    return result
+    return max_question_id
