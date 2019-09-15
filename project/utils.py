@@ -54,20 +54,31 @@ def load_embeddings(embeddings_path):
     return starspace_embeddings, starspace_embeddings[next(iter(starspace_embeddings))].shape
 
 
-def question_to_vec(question, embeddings, dim):
-    """Transforms a string to an embedding by averaging word embeddings."""
-    
-    # Hint: you have already implemented exactly this function in the 3rd assignment.
+def question_to_vec(question, embeddings, dim=300):
+    """
+        question: a string
+        embeddings: dict where the key is a word and a value is its' embedding
+        dim: size of the representation
 
-    ########################
-    #### YOUR CODE HERE ####
-    ########################
+        result: vector representation for the question
+    """
+#     vector = np.array([ wv_embeddings[word] for word in question.split() if word in wv_embeddings ])
+#     mean = np.zeros(dim)
+#     if len(vector) != 0:
+#         mean = vector.mean(axis=0)
+     
+#     return mean
 
-    # remove this when you're done
-    raise NotImplementedError(
-        "Open utils.py and fill with your code. In case of Google Colab, download"
-        "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
-        "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
+    result = np.zeros(dim)
+    cnt = 0
+    words = question.split()
+    for word in words:
+        if word in embeddings:
+            result += np.array(embeddings[word])
+            cnt += 1
+    if cnt != 0:
+        result /= cnt
+    return result
 
 
 def unpickle_file(filename):
