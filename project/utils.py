@@ -63,13 +63,6 @@ def question_to_vec(question, embeddings, dim=300):
 
         result: vector representation for the question
     """
-#     vector = np.array([ wv_embeddings[word] for word in question.split() if word in wv_embeddings ])
-#     mean = np.zeros(dim)
-#     if len(vector) != 0:
-#         mean = vector.mean(axis=0)
-     
-#     return mean
-
     result = np.zeros(dim)
     cnt = 0
     words = question.split()
