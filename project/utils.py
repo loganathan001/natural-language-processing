@@ -2,6 +2,7 @@ import nltk
 import pickle
 import re
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -85,3 +86,22 @@ def unpickle_file(filename):
     """Returns the result of unpickling the file content."""
     with open(filename, 'rb') as f:
         return pickle.load(f)
+    
+def rank_candidates(question, candidates, embeddings, dim=300):
+    """
+        question: a string
+        candidates: a list of strings (candidates) which we want to rank
+        embeddings: some embeddings
+        dim: dimension of the current embeddings
+        
+        result: a list of pairs (initial position in the list, question)
+    """
+
+    q_vecs = np.array([question_to_vec(question, embeddings, dim) for i in range(len(candidates))])
+    cand_vecs = np.array([question_to_vec(candidate, embeddings, dim) for candidate in candidates])
+    cosines = np.array(cosine_similarity(q_vecs, cand_vecs)[0])
+    merged_list = list(zip(cosines, range(len(candidates)), candidates))
+
+    sorted_list  = sorted(merged_list, key=lambda x: x[0], reverse=True)
+    result = [(b,c) for a,b,c in sorted_list]
+    return result
