@@ -80,7 +80,7 @@ def unpickle_file(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
     
-def best_matching_thread_id(question_vec, thread_embeddings):
+def best_matching_thread_index(question_vec, thread_embeddings):
     """
         question: a string
         candidates: a list of strings (candidates) which we want to rank
@@ -90,12 +90,11 @@ def best_matching_thread_id(question_vec, thread_embeddings):
         result: a list of pairs (initial position in the list, question)
     """
 
-    max_cosine_value = -1.0
-    max_question_id = -1;
-    for i, thread_vec in enumerate(thread_embeddings) :
-        cosine_value = cosine_similarity([question_vec], [thread_vec])[0]
-        if cosine_value > max_cosine_value:
-            max_cosine_value = cosine_value
-            max_question_id = i
+    cs = np.apply_along_axis(
+    lambda x: cosine_similarity([question_vec], [x])[0], 
+    1, 
+     thread_embeddings
+                   )
+    max_index = np.argmax(cs, axis=0)[0]
 
-    return max_question_id
+    return max_index
