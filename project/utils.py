@@ -3,6 +3,7 @@ import pickle
 import re
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import pairwise_distances_argmin
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -90,11 +91,12 @@ def best_matching_thread_index(question_vec, thread_embeddings):
         result: a list of pairs (initial position in the list, question)
     """
 
-    cs = np.apply_along_axis(
-    lambda x: cosine_similarity([question_vec], [x])[0], 
-    1, 
-     thread_embeddings
-                   )
-    max_index = np.argmax(cs, axis=0)[0]
+#     cs = np.apply_along_axis(
+#     lambda x: cosine_similarity([question_vec], [x])[0], 
+#     1, 
+#      thread_embeddings
+#                    )
+#     max_index = np.argmax(cs, axis=0)[0]
 
-    return max_index
+#     return max_index
+    return pairwise_distances_argmin(np.array([question_vec]),thread_embeddings)[0]
