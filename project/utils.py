@@ -99,4 +99,8 @@ def best_matching_thread_index(question_vec, thread_embeddings):
 #     max_index = np.argmax(cs, axis=0)[0]
 
 #     return max_index
-    return pairwise_distances_argmin(np.array([question_vec]),thread_embeddings)[0]
+    return pairwise_distances_argmin(
+        np.array([question_vec]),
+        thread_embeddings, 
+        metric='cosine'
+    )[0]
