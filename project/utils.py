@@ -32,6 +32,30 @@ def text_prepare(text):
 
     return text.strip()
 
+def text_prepare_conversation(text):
+    """Performs tokenization and simple preprocessing."""
+    
+    replace_by_space_re = re.compile('[/(){}\[\]\|@,;]')
+    bad_symbols_re = re.compile('[^0-9a-z #+_]')
+
+    text = text.lower()
+    text = replace_by_space_re.sub(' ', text)
+    text = bad_symbols_re.sub('', text)
+    text = ' '.join([x for x in text.split()])
+
+    return text.strip()
+
+def load_lines_dict(file):
+    lines_dict = {}
+
+    with open(file, 'rt', encoding='utf-8', errors='ignore') as in_file:
+        line = in_file.readline()
+        while(line):
+            cols = line.split('\t')
+
+            lines_dict[cols[0]] = cols[1]
+            line = in_file.readline()
+    return lines_dict
 
 def load_embeddings(embeddings_path):
     """Loads pre-trained word embeddings from tsv file.
@@ -75,6 +99,15 @@ def question_to_vec(question, embeddings, dim=300):
         result /= cnt
     return result
 
+def load_conversations_by_codes(file):
+    conversations_list=[]
+    
+    with open(file, 'rt', encoding='utf-8', errors='ignore') as in_file:
+        line = in_file.readline()
+        while(line):
+            codes = line.split('\t')
+            codes.extend(codes)
+    return conversations_list
 
 def unpickle_file(filename):
     """Returns the result of unpickling the file content."""
